@@ -8,11 +8,7 @@ class Solution {
             
             int count = 1;
             while (count <= index) {
-                if (ch == 'z') {
-                    ch = 'a';
-                } else {
-                    ch++;
-                }
+                ch = ch == 'z' ? 'a' : ++ch;
                 
                 if (!skip.contains(String.valueOf(ch))) count++;
             }
