@@ -7,10 +7,16 @@ class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         String[] strArr = br.readLine().split(" ");
+        /*
         int sum = Stream.of(strArr).mapToInt(e -> {
             int a = Integer.valueOf(e);
             return a *= a;
         }).sum();
+        */
+        int sum = 0;
+        for (String s : strArr) {
+            sum += Math.pow(Integer.valueOf(s), 2);
+        }
         
         System.out.println(sum % 10);
     }
