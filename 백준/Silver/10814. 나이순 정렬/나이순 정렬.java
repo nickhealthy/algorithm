@@ -1,47 +1,34 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 class Main {
     public static void main(String[] args) throws IOException {
-        List<Person> arr = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         
         int N = Integer.valueOf(br.readLine());
-        String[] inputData;
+        // 나이 범위: 1 ~ 200
+        StringBuilder[] p = new StringBuilder[201]; // 선언
+        for (int i = 0; i < p.length; i++) {
+            p[i] = new StringBuilder(); // 초기화
+        }
+        
         for (int i = 0; i < N; i++) {
-            inputData = br.readLine().split(" ");
-            arr.add(new Person(Integer.valueOf(inputData[0]), inputData[1]));
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int age = Integer.valueOf(st.nextToken());
+            String name = st.nextToken();
+            
+            p[age].append(age).append(' ').append(name).append("\n");
         }
         
-        arr.sort((a, b) -> a.getAge() - b.getAge());
-        for (int i = 0; i < arr.size(); i++) {
-            sb.append(arr.get(i)).append("\n");
+        StringBuilder sb = new StringBuilder();
+        for (StringBuilder val: p) {
+            sb.append(val);
         }
         
-        System.out.print(sb);
-        
-    }
-}
+        bw.write(sb.toString());
 
-class Person {
-    private int age;
-    private String name;
-    
-    public Person(int age, String name) {
-        this.age = age;
-        this.name = name;
-    }
-    
-    public int getAge() {
-        return this.age;
-    }
-    
-    public String getName() {
-        return this.name;
-    }
-    
-    public String toString() {
-        return age + " " + name;
+        bw.close();
+        br.close();
     }
 }
