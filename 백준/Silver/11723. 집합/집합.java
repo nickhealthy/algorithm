@@ -7,45 +7,19 @@ class Main {
         StringBuilder sb = new StringBuilder();
         
         int T = Integer.valueOf(br.readLine());
-        Set<Integer> set = new HashSet<>();
+        StringTokenizer st;
+        int S = 0;
         while (T-- > 0) {
-            String[] strArr = br.readLine().split(" ");
-            String command = strArr[0];
-            
-            int num = 0;
-            if (strArr.length > 1) num = Integer.valueOf(strArr[1]);
-            
-            switch (command) {
-                case "add":
-                    set.add(num);
-                    break;
-                case "remove":
-                    if (set.contains(num)) {
-                        set.remove(num);
-                    }
-                    break;
-                case "check":
-                    if (set.contains(num)) {
-                        sb.append(1).append("\n");
-                        break;
-                    }
-                    sb.append(0).append("\n");
-                    break;
-                case "toggle":
-                    if (set.contains(num)) {
-                        set.remove(num);
-                        break;
-                    }
-                    set.add(num);
-                    break;
-                case "all":
-                    for (int i = 1; i <= 20; i++) {
-                        set.add(i);
-                    }
-                    break;
-                case "empty":
-                    set.clear();
-                    break;
+            st = new StringTokenizer(br.readLine());
+            String str = st.nextToken();
+            if (str.equals("all")) S = (1 << 21) - 1;
+            else if (str.equals("empty")) S = 0;
+            else {
+                int num = Integer.valueOf(st.nextToken());
+                if (str.equals("add")) S |= (1 << num);
+                else if (str.equals("remove")) S &= ~(1 << num);
+                else if (str.equals("check")) sb.append((S & (1 << num)) != 0 ? 1 : 0).append("\n");
+                else if (str.equals("toggle")) S ^= (1 << num);
             }
         }
         
