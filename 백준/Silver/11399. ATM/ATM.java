@@ -6,22 +6,21 @@ class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.valueOf(br.readLine());
-        int[] arr = new int[N];
+        int[] arr = new int[1001];
         
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            arr[i] = Integer.valueOf(st.nextToken());
+            arr[Integer.valueOf(st.nextToken())]++;
         }
         
-        Arrays.sort(arr);
-        
         int answer = 0;
-        int temp = 1;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < temp && j < N; j++) {
-                answer += arr[j];
+        int prev = 0;
+        for (int i = 0; i < 1001; i++) {
+            
+            while (arr[i]-- > 0) {
+                answer += i + prev;
+                prev += i;
             }
-            temp++;
         }
         
         System.out.println(answer);
