@@ -1,28 +1,29 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
+
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int K = Integer.valueOf(st.nextToken());
-        int N = Integer.valueOf(st.nextToken());
+        int k = Integer.valueOf(st.nextToken());
+        int n = Integer.valueOf(st.nextToken());
         
-        long[] arr = new long[K];
-        for (int i = 0; i < K; i++) {
-            arr[i] = Integer.valueOf(br.readLine());
+        long[] arr = new long[k];
+        long max = Integer.MIN_VALUE;
+        for (int i = 0; i < k; i++) {
+            long num = Long.valueOf(br.readLine());
+            arr[i] = num;
+            max = Math.max(max, num);
         }
         
-        Arrays.sort(arr);
         long min = 1;
-        long max = arr[K - 1];
-        
         long answer = 0;
         while (min <= max) {
             long mid = (min + max) / 2;
             
-            if (canMake(arr, mid, N)) {
+            // 길이가 mid 길이일 때 N개 이상 만들 수 있는지 확인
+            if (canMake(arr, mid, n)) {
                 answer = mid;
                 min = mid + 1;
             } else {
@@ -33,10 +34,11 @@ class Main {
         System.out.println(answer);
     }
     
-    public static boolean canMake(long[] arr, long mid, int n) {
-        int result = 0;
+    public static boolean canMake(long[] arr, long length, int n) {
+        long result = 0;
+        
         for (int i = 0; i < arr.length; i++) {
-            result += arr[i] / mid;
+            result += arr[i] / length;
         }
         
         return n <= result;
