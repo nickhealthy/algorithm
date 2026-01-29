@@ -10,14 +10,11 @@ class Main {
         int C = Integer.valueOf(br.readLine());
         
         String val = String.valueOf(A * B * C);
-        int[] arr = new int[10];
-        for (char ch: val.toCharArray()) {
-            arr[ch - '0']++;
-        }
         
-        for (int v: arr) {
-            System.out.println(v);
-        }
+        int[] counts = new int[10];
+        val.chars().forEach(ch -> counts[ch - '0']++);
+        
+        Arrays.stream(counts).forEach(System.out::println);
         
         br.close();
     }
