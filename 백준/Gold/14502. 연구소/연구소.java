@@ -2,85 +2,128 @@ import java.io.*;
 import java.util.*;
 
 class Main {
-    static int N, M;
-    static int[][] graph;
-    static boolean[][] visited;
-    static int[] dx = {0, 0, -1, 1};
-    static int[] dy = {1, -1, 0, 0};
+    
+    private static final int EMPTY = 0;
+    private static final int WALL = 1;
+    private static final int VIRUS = 2;
+    private static final int REQUIRED_WALL = 3;
+    private static final int[][] DIRECTIONS = {
+        {0, 1},
+        {1, 0},
+        {0, -1},
+        {-1, 0}
+    };
+    
+    private static int n, m, answer;
+    private static int[][] graph;
+    private static List<Point> emptySpaces = new ArrayList();
+    private static List<Point> virusSpaces = new ArrayList();
     
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int result = 0;
         
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        graph = new int[n][m];
         
-        graph = new int[N][M];
-        List<int[]> empty = new ArrayList();
-        for (int i = 0; i < N; i++) {
+        for (int row = 0; row < n; row++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < M; j++) {
-                graph[i][j] = Integer.parseInt(st.nextToken());
-                if (graph[i][j] == 0) empty.add(new int[] {i, j});
-            }
-        }
-        
-        int size = empty.size();
-        for (int i = 0; i < size - 2; i++) {
-            for (int j = i + 1; j < size - 1; j++) {
-                for (int k = j + 1; k < size; k++) {
-                    // 벽 세우기
-                    graph[empty.get(i)[0]][empty.get(i)[1]] = 1;
-                    graph[empty.get(j)[0]][empty.get(j)[1]] = 1;
-                    graph[empty.get(k)[0]][empty.get(k)[1]] = 1;
-                    
-                    result = Math.max(result, bfs());
-                   
-                    // 복구
-                    graph[empty.get(i)[0]][empty.get(i)[1]] = 0;
-                    graph[empty.get(j)[0]][empty.get(j)[1]] = 0;
-                    graph[empty.get(k)[0]][empty.get(k)[1]] = 0;                    
+            for (int col = 0; col < m; col++) {
+                int value = Integer.parseInt(st.nextToken());
+                graph[row][col] = value;
+                
+                if (value == EMPTY) {
+                    emptySpaces.add(Point.of(row, col));
+                } else if (value == VIRUS) {
+                    virusSpaces.add(Point.of(row, col));
                 }
             }
         }
         
-        System.out.println(result);
+        buildWalls(0, 0);
+        System.out.println(answer);
+        
     }
     
-    private static int bfs() {
-        int count = 0;        
-        Queue<int[]> q = new ArrayDeque();
-        int[][] copyGraph = new int[N][M];
+    private static void buildWalls(int startIndex, int selectedCount) {
+        if (selectedCount == REQUIRED_WALL) {
+            answer = Math.max(answer, simulateVirusSpread());
+            return;
+        }
         
-        // graph 복사
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                copyGraph[i][j] = graph[i][j];
-                if (graph[i][j] == 2) q.add(new int[] {i, j});
+        for (int index = startIndex; index < emptySpaces.size(); index++) {
+            Point wall = emptySpaces.get(index);
+            graph[wall.row][wall.col] = WALL;
+            buildWalls(index + 1, selectedCount + 1);
+            graph[wall.row][wall.col] = EMPTY;
+        }
+    }
+    
+    private static int simulateVirusSpread() {
+        int[][] copiedGraph = copyGraph();
+        Queue<Point> queue = new ArrayDeque(virusSpaces);
+        
+        while (!queue.isEmpty()) {
+            Point curr = queue.poll();
+            
+            for (int[] direction: DIRECTIONS) {
+                int nextRow = curr.row + direction[0];
+                int nextCol = curr.col + direction[1];
+                
+                if (isOutOfRange(nextRow, nextCol)) {
+                    continue;
+                }
+                if (copiedGraph[nextRow][nextCol] != EMPTY) {
+                    continue;
+                }
+                
+                copiedGraph[nextRow][nextCol] = VIRUS;
+                queue.offer(Point.of(nextRow, nextCol));
             }
         }
         
-        // 바이러스 전파
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
-            for (int i = 0; i < 4; i++) {
-                int nx = curr[0] + dx[i];
-                int ny = curr[1] + dy[i];
-                
-                if (nx >= 0 && nx < N && ny >= 0 && ny < M && copyGraph[nx][ny] == 0) {
-                    copyGraph[nx][ny] = 2;
-                    q.offer(new int[] {nx, ny});
+        return countSafeArea(copiedGraph);
+    }
+    
+    private static int[][] copyGraph() {
+        int[][] copied = new int[n][m];
+        for (int row = 0; row < n; row++) {
+            System.arraycopy(graph[row], 0, copied[row], 0, m);
+        }
+        
+        return copied;
+    }
+    
+    private static int countSafeArea(int[][] copiedGraph) {
+        int safeArea = 0;
+        
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < m; col++) {
+                if (copiedGraph[row][col] == EMPTY) {
+                    safeArea++;
                 }
             }
         }
         
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (copyGraph[i][j] == 0) count++;
-            }
+        return safeArea;
+    }
+    
+    private static boolean isOutOfRange(int row, int col) {
+        return row < 0 || row >= n || col < 0 || col >= m;
+    }
+    
+    private static class Point {
+        private final int row;
+        private final int col;
+        
+        private Point(int row, int col) {
+            this.row = row;
+            this.col = col;
         }
         
-        return count;
+        private static Point of(int row, int col) {
+            return new Point(row, col);
+        }
     }
 }
