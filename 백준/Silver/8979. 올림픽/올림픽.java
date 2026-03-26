@@ -19,7 +19,7 @@ class Main {
         }
         
         int rank = 1;
-        for (int i = 1; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
             if (i == k) continue;
             if (isBetter(arr[i], arr[k])) rank++;
         }
