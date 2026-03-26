@@ -27,7 +27,7 @@ class Main {
         int rank = 1;
         for (int i = 0; i < n; i++) {
             if (i > 0 && (arr[i][1] != arr[i - 1][1] || arr[i][2] != arr[i - 1][2] || arr[i][3] != arr[i - 1][3]))
-                rank++;
+                rank = i + 1;
             
             if (arr[i][0] == k) {
                 System.out.println(rank);
