@@ -8,7 +8,7 @@ class Main {
         
         int count = 0;
         for (int i = 0; i < n; i++) {
-            if (isRight(br.readLine())) {
+            if (isGroupWord(br.readLine())) {
                 count++;
             }
         }
@@ -16,19 +16,20 @@ class Main {
         System.out.println(count);
     }
     
-    private static boolean isRight(String input) {
-        boolean[] alphabet = new boolean[26];
+    private static boolean isGroupWord(String input) {
+        Map<Character, Integer> map = new HashMap<>();
         char prev = input.charAt(0);
         
         for (char c: input.toCharArray()) {
             if (prev != c) {
-                if (alphabet[c - 'a']) return false;
+                if (map.containsKey(c)) return false;
             }
-            
-            alphabet[c - 'a'] = true;
+
+            map.put(c, map.getOrDefault(map.get(c), 0) + 1);
             prev = c;
         }
         
         return true;
+        
     }
 }
