@@ -18,15 +18,16 @@ class Main {
     
     private static boolean isGroupWord(String input) {
         Map<Character, Integer> map = new HashMap<>();
-        char prev = input.charAt(0);
+        char[] chars = input.toCharArray();
         
-        for (char c: input.toCharArray()) {
-            if (prev != c) {
-                if (map.containsKey(c)) return false;
+        map.put(chars[0], 1);
+        
+        for (int i = 1; i < chars.length; i++) {
+            if (chars[i] != chars[i - 1]) {
+                if (map.containsKey(chars[i])) return false;
             }
 
-            map.put(c, map.getOrDefault(map.get(c), 0) + 1);
-            prev = c;
+            map.put(chars[i], 1);
         }
         
         return true;
