@@ -9,25 +9,26 @@ class Solution {
             {3, 3, 1, 1, 2, 2, 4, 4, 5, 5}    // 3번 수포자 
         };
 
-        Map<Integer, Integer> scoreMap = new HashMap<>();
+        int[] scoreArr = new int[patterns.length];
+        
         for (int i = 0; i < answers.length; i++) {
             for (int j = 0; j < patterns.length; j++) {
                 if (answers[i] == patterns[j][i % patterns[j].length]) {
-                    int person = j + 1;
-                    scoreMap.put(person, scoreMap.getOrDefault(person, 0) + 1);
+                    scoreArr[j]++;
                 }
             }
         }
         
+        // 가장 높은 점수를 받은 사람 집계
         int maxScore = 0;
-        for (int score: scoreMap.values()) {
-            maxScore = Math.max(maxScore, score);
+        for (int i = 0; i < scoreArr.length; i++) {
+            maxScore = Math.max(maxScore, scoreArr[i]);
         }
         
         List<Integer> list = new ArrayList();
-        for (int i = 1; i <= 3; i++) {
-            if (maxScore == scoreMap.getOrDefault(i, 0)) {
-                list.add(i);
+        for (int i = 0; i < scoreArr.length; i++) {
+            if (maxScore == scoreArr[i]) {
+                list.add(i + 1);
             }
         }
         
