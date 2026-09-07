@@ -10,12 +10,5 @@ int solution(vector<int> nums)
         data[e]++;
     }
     
-    unordered_map<int, int> map;
-    for (auto [key, value]: data) {
-        if (!map.contains(key)) {
-            map[key]++;
-        }
-    }
-    
-    return (map.size() >= MAX_SIZE) ? MAX_SIZE : map.size();
+    return min((int)data.size(), MAX_SIZE);
 }
