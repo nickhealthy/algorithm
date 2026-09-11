@@ -1,23 +1,21 @@
+#include <string>
+#include <vector>
 #include <bits/stdc++.h>
 
 using namespace std;
 
 string solution(vector<string> participant, vector<string> completion) {
-    unordered_map<string, int> participantMap;
+    unordered_map<string, int> um;
     
     for (string p: participant) {
-        participantMap[p]++;
+        um[p]++;
     }
     
     for (string c: completion) {
-        participantMap[c]--;
+        um[c]--;
     }
     
-    string answer = "";
-    for (auto [key, value]: participantMap) {
-        if (value != 0) answer = key;
+    for (auto [key, value]: um) {
+        if (um[key] == 1) return key;
     }
-    
-    return answer;
 }
-
