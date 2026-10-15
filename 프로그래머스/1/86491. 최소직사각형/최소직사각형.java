@@ -2,15 +2,12 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] sizes) {
-        int answer = 0;
-        
-        List<Integer> maxList = new ArrayList();
-        List<Integer> minList = new ArrayList();
-        for (int i = 0; i < sizes.length; i++) {
-            maxList.add(Math.max(sizes[i][0], sizes[i][1]));
-            minList.add(Math.min(sizes[i][0], sizes[i][1]));
+        int length = 0, height = 0;
+        for (int[] card : sizes) {
+            length = Math.max(length, Math.max(card[0], card[1]));
+            height = Math.max(height, Math.min(card[0], card[1]));
         }
-        
-        return Collections.max(maxList) * Collections.max(minList);
+            
+        return length * height;
     }
 }
