@@ -10,8 +10,6 @@ class Solution {
         }
 
         int length = nums.length / 2;
-        return hs.size() >= length ? length : hs.size();
-        
-        
+        return Math.min(length, hs.size());
     }
 }
