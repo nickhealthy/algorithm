@@ -3,17 +3,14 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] nums) {
-        Map<Integer, Integer> map = new HashMap<>();
+        Set<Integer> hs = new HashSet();
         
-        for (int key: nums) {
-            map.put(key, map.getOrDefault(key, 0) + 1);
+        for (int e: nums) {
+            hs.add(e);
         }
-        
-        if (map.size() >= (nums.length / 2)) {
-            return nums.length / 2;
-        } else {
-            return map.size();
-        }
+
+        int length = nums.length / 2;
+        return hs.size() >= length ? length : hs.size();
         
         
     }
